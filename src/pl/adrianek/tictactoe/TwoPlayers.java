@@ -5,11 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SelectGame extends JFrame implements ActionListener {
+public class TwoPlayers extends JFrame implements ActionListener {
 
     JButton b1,b2,b3, b4, b5, b6, b7, b8, b9;
-    SelectGame(){
+    TwoPlayers(){
         setLayout(null);
+
+        setTitle("Tryb: Gracz vs Gracz");
 
         setBackground(Color.BLACK);
 
@@ -94,14 +96,9 @@ public class SelectGame extends JFrame implements ActionListener {
         b9.addActionListener(this);
         add(b9);
 
-
         setSize(700, 800);
         setLocation(300 ,0);
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new SelectGame();
     }
 
     boolean toe = true;
@@ -113,26 +110,36 @@ public class SelectGame extends JFrame implements ActionListener {
 
             if (czyWygrana()) {
                 JOptionPane.showMessageDialog(null, "Wygrywa gracz: " + (toe ? "X" : "O"));
-                String[] options = {"Graj ponownie", "Menu główne"};
-                int result = JOptionPane.showOptionDialog(null,
-                        "Grasz ponownie?",
-                        "",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        options,
-                        options[0]
-                );
-                if(result == JOptionPane.YES_OPTION){
-                    new SelectGame();
-                }else if (result == JOptionPane.NO_OPTION){
-
-                }else {
-                    label.setText("None selected");
-                }
+                select();
+            }  else if (czyRemis()) {
+                JOptionPane.showMessageDialog(null, "Remis!");
+                select();
             } else {
                 toe = !toe;
             }
+        }
+    }
+
+    private void select(){
+        String[] options = {"Graj ponownie", "Menu główne"};
+        int result = JOptionPane.showOptionDialog(null,
+                "Grasz ponownie?",
+                "",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+        if(result == JOptionPane.YES_OPTION){
+            setVisible(false);
+            new TwoPlayers().setVisible(true);
+        }else if (result == JOptionPane.NO_OPTION){
+            setVisible(false);
+            new SelectGame().setVisible(true);
+        }else {
+            setVisible(false);
+            new SelectGame().setVisible(true);
         }
     }
 
@@ -154,5 +161,14 @@ public class SelectGame extends JFrame implements ActionListener {
             }
         }
         return false;
+    }
+
+    private boolean czyRemis() {
+        for (Component c : getContentPane().getComponents()) {
+            if (c instanceof JButton && ((JButton) c).getText().equals("")) {
+                return false;
+            }
+        }
+        return true;
     }
 }
